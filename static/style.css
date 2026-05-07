@@ -1,0 +1,71 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f9;
+    margin: 0;
+    padding: 0;
+}
+
+/* container title */
+h1 {
+    text-align: center;
+    margin-top: 20px;
+    color: #333;
+}
+
+/* user card */
+.card {
+    background: white;
+    width: 300px;
+    margin: 15px auto;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: scale(1.03);
+}
+
+/* profile image */
+.card img {
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+    border: 3px solid #4a90e2;
+}
+
+/* text */
+.card h3 {
+    margin: 10px 0 5px;
+    color: #222;
+}
+
+.card p {
+    margin: 5px 0;
+    color: #555;
+}
+
+/* buttons */
+.btn {
+    display: inline-block;
+    padding: 6px 12px;
+    margin: 5px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    color: white;
+}
+
+.btn-warning {
+    background-color: #f0ad4e;
+}
+
+.btn-danger {
+    background-color: #d9534f;
+}
+
+.btn:hover {
+    opacity: 0.85;
+}

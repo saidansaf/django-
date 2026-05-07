@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Update User
+{% endblock %}
+
+{% block content %}
+
+<div class="card">
+
+    <h1>Update User</h1>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <label>Ism</label>
+        <input type="text" name="first_name" value="{{ user.first_name }}">
+
+        <label>Familiya</label>
+        <input type="text" name="last_name" value="{{ user.last_name }}">
+
+        <label>Rasm</label>
+        <input type="file" name="picture">
+
+        {% if user.picture %}
+            <img src="{{ user.picture.url }}" width="150">
+        {% endif %}
+
+        <br><br>
+
+        <button type="submit" class="btn-update">
+            Update
+        </button>
+
+        <a href="{% url 'user_list' %}">
+            <button type="button" class="btn-cancel">
+                Cancel
+            </button>
+        </a>
+
+    </form>
+
+</div>
+
+{% endblock %}
