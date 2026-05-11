@@ -1,14 +1,15 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import get_user_model
+from django.utils.text import slugify
 import uuid
+
 from . import models
 
-User = get_user_model()
+User=get_user_model()
 
 
 def run(request):
-    users=User.objects.all()
-    print(users)
+    users = User.objects.all()
     return render(request,'index.html',{'users': users})
 
 
@@ -16,17 +17,22 @@ def users_view(request):
     users=User.objects.all()
     return render(request,'user_view.html',{'users': users})
 
+
 def create_user(request):
-    if request.POST:
-        name=request.POST.get('first_name')
-        surename=request.POST.get('last_name')
+
+    if request.method=="POST":
+        first_name=request.POST.get('first_name')
+        last_name=request.POST.get('last_name')
+        email=request.POST.get('email')
+        phone=request.POST.get('phone')
         picture=request.FILES.get('picture')
 
-        user=User.objects.create(
-            first_name=name,
-            last_name=surename,
-            email=f"{name}{surename}{str(uuid.uuid4())[:3]}",
-            picture=picture
+        user = User.objects.create(
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            phone=phone,
+            picture=picture,
         )
 
         return redirect('/')
@@ -34,26 +40,28 @@ def create_user(request):
     return render(request,'create_user.html')
 
 
-def update_user(request,slug):
-    user=models.CustomUser.objects.get(slug=slug)
+def update_user(request, slug):
+    user=get_object_or_404(models.CustomUser, slug=slug)
 
-    if request.POST:
+    if request.method=="POST":
         user.first_name=request.POST.get('first_name')
         user.last_name=request.POST.get('last_name')
-
+        email=request.POST.get('email')
+        phone=request.POST.get('phone')
         if request.FILES.get('picture'):
             user.picture=request.FILES.get('picture')
-
         user.save()
+
         return redirect('/')
 
     return render(request,'update_user.html',{'user': user})
 
 
 def delete_user(request, slug):
-    user=models.CustomUser.objects.get(slug=slug)
 
-    if request.POST:
+    user=get_object_or_404(models.CustomUser, slug=slug)
+
+    if request.method=="POST":
         user.delete()
         return redirect('/')
 
