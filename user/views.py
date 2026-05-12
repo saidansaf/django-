@@ -1,68 +1,87 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import get_user_model
-from django.utils.text import slugify
-import uuid
+from django.shortcuts import render, redirect
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import login_required
+from .forms import RegisterForm, LoginForm
 
-from . import models
+def home_view(request):
 
-User=get_user_model()
+    return render(request, 'home.html')
 
+def register_view(request):
 
-def run(request):
-    users = User.objects.all()
-    return render(request,'index.html',{'users': users})
+    form = RegisterForm()
 
+    if request.method == 'POST':
 
-def users_view(request):
-    users=User.objects.all()
-    return render(request,'user_view.html',{'users': users})
-
-
-def create_user(request):
-
-    if request.method=="POST":
-        first_name=request.POST.get('first_name')
-        last_name=request.POST.get('last_name')
-        email=request.POST.get('email')
-        phone=request.POST.get('phone')
-        picture=request.FILES.get('picture')
-
-        user = User.objects.create(
-            first_name=first_name,
-            last_name=last_name,
-            email=email,
-            phone=phone,
-            picture=picture,
+        form = RegisterForm(
+            request.POST,
+            request.FILES
         )
 
-        return redirect('/')
+        if form.is_valid():
 
-    return render(request,'create_user.html')
+            user = form.save()
 
+            login(request, user)
 
-def update_user(request, slug):
-    user=get_object_or_404(models.CustomUser, slug=slug)
+            return redirect('home')
 
-    if request.method=="POST":
-        user.first_name=request.POST.get('first_name')
-        user.last_name=request.POST.get('last_name')
-        email=request.POST.get('email')
-        phone=request.POST.get('phone')
-        if request.FILES.get('picture'):
-            user.picture=request.FILES.get('picture')
-        user.save()
+    return render(request,'register.html',{'form':form})
 
-        return redirect('/')
+def login_view(request):
 
-    return render(request,'update_user.html',{'user': user})
+    form = LoginForm()
 
+    if request.method == 'POST':
 
-def delete_user(request, slug):
+        form = LoginForm(
+            request,
+            data=request.POST
+        )
 
-    user=get_object_or_404(models.CustomUser, slug=slug)
+        if form.is_valid():
 
-    if request.method=="POST":
-        user.delete()
-        return redirect('/')
+            email = form.cleaned_data.get('username')
 
-    return render(request,'delete_user.html',{'user': user})
+            password = form.cleaned_data.get('password')
+
+            user = authenticate(
+               request,
+               email=email,
+               password=password
+            )
+
+            if user is not None:
+
+                login(request, user)
+
+                return redirect('home')
+            
+    context = {
+        'form':form
+    }
+
+    return render(
+        request,
+        'login.html',
+        context
+    )
+
+def logout_view(request):
+
+    logout(request)
+
+    return redirect('login')
+
+@login_required
+def profile_view(request):
+
+    context = {
+        'user': request.user
+    }
+
+    return render(
+        request,
+        'profile.html',
+        context
+    )
