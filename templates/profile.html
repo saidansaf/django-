@@ -18,8 +18,14 @@
 
 <h2>{{ user.phone_number }}</h2>
 
-<a href="{% url 'logout' %}">
-    Logout
-</a>
+<form action="{% url 'logout' %}" method="POST">
+
+    {% csrf_token %}
+
+    <button type="submit">
+        Logout
+    </button>
+
+</form>
 </body>
 </html>

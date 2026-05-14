@@ -18,9 +18,15 @@
         Profile
     </a>
 
-    <a href="{% url 'logout' %}">
+    <form action="{% url 'logout' %}" method="POST">
+
+    {% csrf_token %}
+
+    <button type="submit">
         Logout
-    </a>
+    </button>
+
+</form>
 
 {% else %}
 
