@@ -14,4 +14,9 @@ urlpatterns = [
     path('login/',LoginView.as_view(template_name='login.html',authentication_form=LoginForm),name='login'),
     path('logout/',LogoutView.as_view(),name='logout'),
     path('profile/',views.profile_view,name='profile'),
+    path("user/<slug:slug>/", views.user_view, name='user_view'),
+    path("user/create",views.create_user, name='create_user'),
+    path("user/update/<slug:slug>/", views.update_user, name='update_user'),
+    path("user/delete/<slug:slug>/", views.delete_user, name='delete_user'),
+    path("user/<slug:slug>/", views.user_view, name='user_view'),
 ]

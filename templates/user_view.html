@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}
+User Detail
+{% endblock %}
+
+{% block content %}
+
+<div class="card">
+
+    {% if user.picture %}
+        <img src="{{ user.picture.url }}" width="250">
+    {% endif %}
+
+    <p><b>Ism:</b> {{ user.first_name }}</p>
+    <p><b>Familiya:</b> {{ user.last_name }}</p>
+    <p><b>Email:</b> {{ user.email }}</p>
+    <p><b>Telefon:</b> {{ user.phone_number }}</p>
+    <p><b>Slug:</b> {{ user.slug }}</p>
+
+    <br>
+
+    <a href="{% url 'update_user' user.slug %}">
+        <button class="btn-update">Update</button>
+    </a>
+
+    <a href="{% url 'delete_user' user.slug %}">
+        <button class="btn-delete">Delete</button>
+    </a>
+
+    <br>
+    
+    <a href="{% url 'admin_panel' %}">
+        <button class="btn-cancel">Bosh sahifaga qaytish</button>
+    </a>
+
+</div>
+
+{% endblock %}

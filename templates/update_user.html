@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Update User
+{% endblock %}
+
+{% block content %}
+
+<div class="card">
+
+    <h1>Update User</h1>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <label>Ism</label>
+        <input type="text" name="first_name" value="{{ user.first_name }}">
+
+        <label>Familiya</label>
+        <input type="text" name="last_name" value="{{ user.last_name }}">
+
+        <label>Telefon raqam</label>
+        <input type="text" name="phone_number" value="{{ user.phone_number }}">
+
+        <label>Email</label>
+        <input type="text" name="email" value="{{ user.email }}">
+
+        <label>Password</label>
+        <input type="password" name="password" placeholder="Eskisini ko'rish iloji yo'q, yangi parolni kiriting">
+
+        <label>Rasm</label>
+        <input type="file" name="picture">
+
+        {% if user.picture %}
+            <img src="{{ user.picture.url }}" width="150">
+        {% endif %}
+
+        <br><br>
+
+        <button type="submit" class="btn-update">
+            Update
+        </button>
+
+        <a href="{% url 'home' %}">
+            <button type="button" class="btn-cancel">
+                Cancel
+            </button>
+        </a>
+
+    </form>
+
+</div>
+
+{% endblock %}
