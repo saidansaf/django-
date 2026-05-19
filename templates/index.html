@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}Foydalanuvchilar{% endblock %}
+
+{% block content %}
+<div class="page-header" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
+  <div>
+    <h1>Foydalanuvchilar</h1>
+    <p>Tizimda ro'yxatdan o'tgan barcha foydalanuvchilar</p>
+  </div>
+  <a href="{% url 'user-create' %}" class="btn btn-primary">+ Yangi foydalanuvchi</a>
+</div>
+
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Rasm</th>
+          <th>Ism Familiya</th>
+          <th>Email</th>
+          <th>Telefon</th>
+          <th>Holat</th>
+          <th>Amallar</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in users %}
+        <tr>
+          <td>
+            {% if u.picture %}
+              <img src="{{ u.picture.url }}" alt="{{ u }}" class="avatar"/>
+            {% else %}
+              <div class="avatar-placeholder">👤</div>
+            {% endif %}
+          </td>
+          <td><strong>{{ u.first_name }} {{ u.last_name }}</strong></td>
+          <td style="color:var(--muted)">{{ u.email }}</td>
+          <td style="color:var(--muted)">{{ u.phone_number }}</td>
+          <td>
+            {% if u.is_active %}
+              <span class="badge">Faol</span>
+            {% else %}
+              <span class="badge" style="border-color:var(--muted);color:var(--muted)">Nofaol</span>
+            {% endif %}
+          </td>
+          <td>
+            <div style="display:flex; gap:.5rem; flex-wrap:wrap;">
+              <a href="{% url 'user-detail' u.slug %}" class="btn btn-outline btn-sm">Ko'rish</a>
+              <a href="{% url 'user-update' u.slug %}" class="btn btn-primary btn-sm">Tahrir</a>
+              <a href="{% url 'user-delete' u.slug %}" class="btn btn-danger btn-sm">O'chir</a>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="6" style="text-align:center; padding:2.5rem; color:var(--muted);">
+            Hozircha foydalanuvchilar yo'q
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

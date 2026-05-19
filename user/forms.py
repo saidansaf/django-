@@ -30,3 +30,21 @@ class LoginForm(AuthenticationForm):
             }
         )
     )
+
+
+class UserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = [
+            'first_name',
+            'last_name',
+            'email',
+            'phone_number',
+            'picture',
+        ]
+        widgets = {
+            'first_name': forms.TextInput(attrs={'placeholder': 'Ism'}),
+            'last_name': forms.TextInput(attrs={'placeholder': 'Familiya'}),
+            'email': forms.EmailInput(attrs={'placeholder': 'Email'}),
+            'phone_number': forms.TextInput(attrs={'placeholder': 'Telefon raqam'}),
+        }

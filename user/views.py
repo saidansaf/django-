@@ -1,10 +1,10 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout, authenticate,get_user_model
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import login, logout, authenticate, get_user_model
 from django.contrib.auth.decorators import login_required
-from .forms import RegisterForm, LoginForm
-import uuid
+from .forms import RegisterForm, LoginForm, UserUpdateForm
+from .models import CustomUser
 
-User=get_user_model()
+user = get_user_model()
 
 def home_view(request):
 
@@ -89,52 +89,45 @@ def profile_view(request):
         context
     )
 
-def delete_user(request, slug):
-    user = User.objects.get(slug=slug)
+@login_required
+def user_list_view(request):
+    users = CustomUser.objects.all().order_by('-created_at')
+    return render(request, 'index.html', {'users': users})
 
-    if request.POST:
+
+@login_required
+def user_detail_view(request, slug):
+    user = get_object_or_404(CustomUser, slug=slug)
+    return render(request, 'user_view.html', {'user_obj': user})
+
+
+@login_required
+def user_create_view(request):
+    form = RegisterForm()
+    if request.method == 'POST':
+        form = RegisterForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('user-list')
+    return render(request, 'create_user.html', {'form': form})
+
+
+@login_required
+def user_update_view(request, slug):
+    user = get_object_or_404(CustomUser, slug=slug)
+    form = UserUpdateForm(instance=user)
+    if request.method == 'POST':
+        form = UserUpdateForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('user-detail', slug=user.slug)
+    return render(request, 'update_user.html', {'form': form, 'user_obj': user})
+
+
+@login_required
+def user_delete_view(request, slug):
+    user = get_object_or_404(CustomUser, slug=slug)
+    if request.method == 'POST':
         user.delete()
-        return redirect('/')
-
-    return render(request, 'delete_user.html', {'user': user})
-
-def update_user(request, slug):
-    user = User.objects.get(slug=slug)
-
-    if request.POST:
-        user.first_name = request.POST.get('first_name')
-        user.last_name = request.POST.get('last_name')
-
-        if request.FILES.get('picture'):
-            user.picture = request.FILES.get('picture')
-
-        user.save()
-        return redirect('/')
-
-    return render(request, 'update_user.html', {'user': user})
-
-def create_user(request):
-    if request.POST:
-        name=request.POST.get('first_name')
-        surename=request.POST.get('last_name')
-        picture=request.FILES.get('picture')
-
-        user=User.objects.create(
-            first_name=name,
-            last_name=surename,
-            email=f"{name}{surename}{str(uuid.uuid4())[:3]}",
-            picture=picture
-        )
-        return redirect('/')
-    return render(request,'create_user.html')
-
-def user_view(request,slug):
-    one_user=User.objects.get(slug=slug)
-    if request.method == "POST":
-        one_user = request.user
-        one_user.first_name = request.POST.get("first_name")
-        one_user.last_name = request.POST.get("last_name")
-        one_user.phone_number = request.POST.get("phone_number")
-        one_user.email = request.POST.get("email")
-
-    return render(request,'user_view.html',{'user':one_user})
+        return redirect('user-list')
+    return render(request, 'delete_user.html', {'user_obj': user})

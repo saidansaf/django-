@@ -1,43 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>HOME PAGE</h1>
+{% extends 'base.html' %}
+{% block title %}Bosh sahifa{% endblock %}
 
-{% if request.user.is_authenticated %}
+{% block content %}
+<div class="page-header">
+  <h1>Bosh sahifa</h1>
+  {% if request.user.is_authenticated %}
+    <p>Xush kelibsiz, {{ request.user.email }}!</p>
+  {% endif %}
+</div>
 
-    <h2>
-        Welcome {{ request.user.email }}
-    </h2>
-
-    <a href="{% url 'profile' %}">
-        Profile
-    </a>
-
-    <form action="{% url 'logout' %}" method="POST">
-
-    {% csrf_token %}
-
-    <button type="submit">
-        Logout
-    </button>
-
-</form>
-
-{% else %}
-
-    <a href="{% url 'login'%}">
-        Login
-    </a>
-
-    <a href="{% url 'register' %}">
-        Register
-    </a>
-
-{% endif %}
-</body>
-</html>
+<div style="display:flex; gap:1rem; flex-wrap:wrap; margin-top:1rem;">
+  {% if request.user.is_authenticated %}
+    <a href="{% url 'user-list' %}" class="btn btn-primary">Foydalanuvchilar ro'yxati</a>
+    <a href="{% url 'profile' %}" class="btn btn-outline">Profilim</a>
+  {% else %}
+    <a href="{% url 'login' %}" class="btn btn-primary">Kirish</a>
+    <a href="{% url 'register' %}" class="btn btn-outline">Ro'yxatdan o'tish</a>
+  {% endif %}
+</div>
+{% endblock %}

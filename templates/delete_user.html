@@ -1,38 +1,39 @@
 {% extends 'base.html' %}
-
-{% block title %}
-Delete User
-{% endblock %}
+{% block title %}O'chirish — {{ user_obj }}{% endblock %}
 
 {% block content %}
-
-<div class="card">
-
-    <h1>Delete User</h1>
-
-    <p>
-        Rostdan ham
-        <b>{{ user.first_name }} {{ user.last_name }}</b>
-        ni o'chirmoqchimisiz?
-    </p>
-
-    <br>
-
-    <form method="POST">
-        {% csrf_token %}
-
-        <button type="submit" class="btn-delete">
-            Ha, o'chirish
-        </button>
-
-        <a href="{% url 'user_list' %}">
-            <button type="button" class="btn-cancel">
-                Cancel
-            </button>
-        </a>
-
-    </form>
-
+<div class="page-header">
+  <a href="{% url 'user-detail' user_obj.slug %}" style="color:var(--muted);text-decoration:none;font-size:.85rem;">← {{ user_obj }}</a>
+  <h1 style="margin-top:.5rem; color:#e57373;">Foydalanuvchini o'chirish</h1>
 </div>
 
+<div class="card" style="max-width:520px;">
+  <div style="display:flex; align-items:center; gap:1.2rem; margin-bottom:1.8rem; padding-bottom:1.5rem; border-bottom:1px solid var(--border);">
+    {% if user_obj.picture %}
+      <img src="{{ user_obj.picture.url }}" alt="{{ user_obj }}"
+           style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:2px solid #e57373;"/>
+    {% else %}
+      <div style="width:64px;height:64px;border-radius:50%;background:var(--surface2);border:2px solid var(--border);
+                  display:flex;align-items:center;justify-content:center;font-size:1.8rem;">👤</div>
+    {% endif %}
+    <div>
+      <h3 style="font-family:'Playfair Display',serif;color:var(--text);">{{ user_obj.first_name }} {{ user_obj.last_name }}</h3>
+      <p style="color:var(--muted);font-size:.85rem;">{{ user_obj.email }}</p>
+    </div>
+  </div>
+
+  <div style="background:#2a0f0f; border:1px solid #7b2020; border-radius:8px; padding:1rem 1.2rem; margin-bottom:1.8rem;">
+    <p style="color:#e57373; font-size:.9rem; line-height:1.6;">
+      ⚠️ Ushbu foydalanuvchini o'chirishni tasdiqlaysizmi? Bu amalni qaytarib bo'lmaydi.
+    </p>
+  </div>
+
+  <form method="post">
+    {% csrf_token %}
+    <div style="display:flex; gap:1rem;">
+      <button type="submit" class="btn btn-danger">Ha, o'chirish</button>
+      <a href="{% url 'user-detail' user_obj.slug %}" class="btn btn-outline">Bekor qilish</a>
+    </div>
+  </form>
+</div>
 {% endblock %}

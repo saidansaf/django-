@@ -1,39 +1,67 @@
 {% extends 'base.html' %}
-
-{% block title %}
-User Detail
-{% endblock %}
+{% block title %}{{ user_obj }} — Profil{% endblock %}
 
 {% block content %}
-
-<div class="card">
-
-    {% if user.picture %}
-        <img src="{{ user.picture.url }}" width="250">
-    {% endif %}
-
-    <p><b>Ism:</b> {{ user.first_name }}</p>
-    <p><b>Familiya:</b> {{ user.last_name }}</p>
-    <p><b>Email:</b> {{ user.email }}</p>
-    <p><b>Telefon:</b> {{ user.phone_number }}</p>
-    <p><b>Slug:</b> {{ user.slug }}</p>
-
-    <br>
-
-    <a href="{% url 'update_user' user.slug %}">
-        <button class="btn-update">Update</button>
-    </a>
-
-    <a href="{% url 'delete_user' user.slug %}">
-        <button class="btn-delete">Delete</button>
-    </a>
-
-    <br>
-    
-    <a href="{% url 'admin_panel' %}">
-        <button class="btn-cancel">Bosh sahifaga qaytish</button>
-    </a>
-
+<div class="page-header">
+  <a href="{% url 'user-list' %}" style="color:var(--muted);text-decoration:none;font-size:.85rem;">← Foydalanuvchilar</a>
+  <h1 style="margin-top:.5rem;">{{ user_obj.first_name }} {{ user_obj.last_name }}</h1>
+  <p>Foydalanuvchi tafsilotlari</p>
 </div>
 
+<div style="display:grid; grid-template-columns:280px 1fr; gap:1.5rem; align-items:start;">
+
+  <div class="card" style="text-align:center;">
+    {% if user_obj.picture %}
+      <img src="{{ user_obj.picture.url }}" alt="{{ user_obj }}"
+           style="width:120px;height:120px;border-radius:50%;object-fit:cover;border:3px solid var(--gold);margin-bottom:1rem;"/>
+    {% else %}
+      <div style="width:120px;height:120px;border-radius:50%;background:var(--surface2);border:3px solid var(--border);
+                  display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin:0 auto 1rem;">👤</div>
+    {% endif %}
+    <h3 style="font-family:'Playfair Display',serif;color:var(--gold);">{{ user_obj }}</h3>
+    <p style="color:var(--muted);font-size:.85rem;margin-top:.3rem;">{{ user_obj.email }}</p>
+    <div style="margin-top:1.2rem; display:flex; flex-direction:column; gap:.6rem;">
+      <a href="{% url 'user-update' user_obj.slug %}" class="btn btn-primary">Tahrirlash</a>
+      <a href="{% url 'user-delete' user_obj.slug %}" class="btn btn-danger">O'chirish</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--gold);margin-bottom:1.5rem;">
+      Shaxsiy ma'lumotlar
+    </h2>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:.85rem 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:.78rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">Ism</span>
+      <span>{{ user_obj.first_name }}</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:.85rem 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:.78rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">Familiya</span>
+      <span>{{ user_obj.last_name }}</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:.85rem 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:.78rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">Email</span>
+      <span>{{ user_obj.email }}</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:.85rem 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:.78rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">Telefon</span>
+      <span>{{ user_obj.phone_number }}</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:.85rem 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:.78rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">Holat</span>
+      <span>
+        {% if user_obj.is_active %}
+          <span class="badge">Faol</span>
+        {% else %}
+          <span class="badge" style="border-color:var(--muted);color:var(--muted)">Nofaol</span>
+        {% endif %}
+      </span>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:.85rem 0;">
+      <span style="font-size:.78rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">Qo'shilgan</span>
+      <span>{{ user_obj.created_at|date:"d.m.Y" }}</span>
+    </div>
+  </div>
+
+</div>
 {% endblock %}
