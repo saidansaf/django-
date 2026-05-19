@@ -76,18 +76,28 @@ def register_view(request):
 
 #     return redirect('login')
 
+# @login_required
+# def profile_view(request):
+
+#     context = {
+#         'user': request.user
+#     }
+
+#     return render(
+#         request,
+#         'profile.html',
+#         context
+#     )
+
 @login_required
 def profile_view(request):
+    profile = request.user.profile
 
     context = {
-        'user': request.user
+        'user': request.user,
+        'profile': profile,
     }
-
-    return render(
-        request,
-        'profile.html',
-        context
-    )
+    return render(request, 'profile.html', context)
 
 @login_required
 def user_list_view(request):

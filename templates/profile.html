@@ -1,31 +1,321 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>profile</title>
-</head>
-<body>
-    <h1>Profile</h1>
+{% extends 'base.html' %}
 
-<img src="{{ user.avatar.url }}" width="200">
+{% block content %}
+<div class="profile-container">
+  
+  <!-- Asosiy karta -->
+  <div class="profile-card">
+    <div class="profile-header">
+      <div class="avatar-wrapper">
+        {% if user.picture %}
+        <img src="{{ user.picture.url }}" alt="Avatar">
+        {% else %}
+          <img src="/static/default-avatar.png" alt="Avatar">
+        {% endif %}
+        <span class="online-dot"></span>
+      </div>
+      <div class="profile-info">
+        <h2>{{ user.get_full_name }}</h2>
+        <p class="email">✉ {{ user.email }}</p>
+        <div class="badges">
+          {% if user.is_superuser %}
+            <span class="badge superuser">⚡ SUPERUSER</span>
+          {% endif %}
+          {% if user.is_staff %}
+            <span class="badge staff">✳ STAFF</span>
+          {% endif %}
+          <span class="badge member">A'ZO</span>
+        </div>
+        <div class="slug">
+          <span>🔗 /{{ user.username }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<h2>{{ user.first_name }}</h2>
+  <!-- Info kartalar -->
+  <div class="info-grid">
+    <div class="info-card">
+      <span class="dot"></span>
+      <p class="label">TELEFON RAQAM</p>
+      <p class="value">{{ user.phone_number }}</p>
+    </div>
+    <div class="info-card">
+      <span class="dot"></span>
+      <p class="label">QO'SHILGAN SANA</p>
+      <p class="value">{{ user.date_joined|date:"d M, Y" }}</p>
+    </div>
+    <div class="info-card">
+      <span class="dot"></span>
+      <p class="label">VEB-SAYT</p>
+      <a href="{{ profile.website }}" class="value link">{{ profile.website }}</a>
+    </div>
+    <div class="info-card">
+      <span class="dot"></span>
+      <p class="label">STATUS</p>
+      <p class="value status">
+        <span class="dot green"></span>
+        {% if user.is_active %}Faol{% else %}Faol emas{% endif %}
+      </p>
+    </div>
+  </div>
 
-<h2>{{ user.last_name }}</h2>
+  <!-- Bio -->
+  <div class="info-card bio-card">
+    <span class="dot"></span>
+    <p class="label">BIO</p>
+    <p class="value">{{ profile.bio }}</p>
+  </div>
 
-<h2>{{ user.email }}</h2>
+  <!-- Tugmalar -->
+  <div class="action-buttons">
+    <a href="{% url 'home' %}" class="btn btn-primary">🏠 Bosh sahifa</a>
+    <a href="{% url 'logout' %}" class="btn btn-secondary">↪ Chiqish</a>
+  </div>
 
-<h2>{{ user.phone_number }}</h2>
+</div>
 
-<form action="{% url 'logout' %}" method="POST">
 
-    {% csrf_token %}
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
-    <button type="submit">
-        Logout
-    </button>
+  body {
+    background-color: #0d0d1a;
+    color: #ffffff;
+    font-family: 'Segoe UI', sans-serif;
+    min-height: 100vh;
+  }
 
-</form>
-</body>
-</html>
+  .profile-container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* --- Asosiy karta --- */
+  .profile-card {
+    background: #12122a;
+    border-radius: 16px;
+    padding: 30px;
+    border-top: 3px solid #6c63ff;
+    border-bottom: 3px solid #aaff00;
+  }
+
+  .profile-header {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .avatar-wrapper {
+    position: relative;
+    width: 90px;
+    height: 90px;
+  }
+
+  .avatar-wrapper img {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #6c63ff;
+  }
+
+  .online-dot {
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    width: 14px;
+    height: 14px;
+    background: #aaff00;
+    border-radius: 50%;
+    border: 2px solid #12122a;
+  }
+
+  .profile-info h2 {
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .profile-info .email {
+    color: #aaaacc;
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+
+  /* --- Badgelar --- */
+  .badges {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+
+  .badge {
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .badge.superuser {
+    background: #2a1a4a;
+    color: #a78bfa;
+    border: 1px solid #a78bfa;
+  }
+
+  .badge.staff {
+    background: #1a2a1a;
+    color: #aaff00;
+    border: 1px solid #aaff00;
+  }
+
+  .badge.member {
+    background: #1e1e2e;
+    color: #cccccc;
+    border: 1px solid #444466;
+  }
+
+  .slug {
+    background: #1e1e2e;
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    color: #aaaacc;
+    border: 1px solid #333355;
+  }
+
+  /* --- Info grid --- */
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .info-card {
+    background: #12122a;
+    border-radius: 14px;
+    padding: 20px 24px;
+    border: 1px solid #1e1e3a;
+  }
+
+  .info-card .label {
+    font-size: 11px;
+    color: #666688;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .info-card .label::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: #aaff00;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .info-card .value {
+    font-size: 17px;
+    font-weight: 600;
+    color: #ffffff;
+  }
+
+  .info-card .value.link {
+    color: #a78bfa;
+    text-decoration: none;
+    font-size: 14px;
+    word-break: break-all;
+  }
+
+  .info-card .value.link:hover {
+    text-decoration: underline;
+  }
+
+  .value.status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #aaff00;
+  }
+
+  .dot.green {
+    width: 10px;
+    height: 10px;
+    background: #aaff00;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  /* --- Bio --- */
+  .bio-card {
+    width: 100%;
+  }
+
+  .bio-card .value {
+    font-size: 15px;
+    font-weight: 400;
+    color: #ccccdd;
+  }
+
+  /* --- Tugmalar --- */
+  .action-buttons {
+    display: flex;
+    gap: 12px;
+  }
+
+  .btn {
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+
+  .btn:hover {
+    opacity: 0.85;
+  }
+
+  .btn-primary {
+    background: #aaff00;
+    color: #0d0d1a;
+  }
+
+  .btn-secondary {
+    background: #1e1e2e;
+    color: #ffffff;
+    border: 1px solid #333355;
+  }
+
+  /* --- Responsive --- */
+  @media (max-width: 600px) {
+    .info-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .profile-header {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .badges {
+      justify-content: center;
+    }
+  }
+</style>
+
+{% endblock %}
