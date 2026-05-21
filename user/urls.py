@@ -19,4 +19,7 @@ urlpatterns = [
     path('users/<slug:slug>/', views.user_detail_view, name='user-detail'),
     path('users/<slug:slug>/update/', views.user_update_view, name='user-update'),
     path('users/<slug:slug>/delete/', views.user_delete_view, name='user-delete'),
+    path('profile/', views.profile_view, name='profile'),
+    path('profile/edit/', views.profile_edit_view, name='profile_edit'),
+    path('profile/delete/', views.profile_delete_view, name='profile_delete'),
 ]

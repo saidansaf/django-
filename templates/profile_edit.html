@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profilni tahrirlash</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+    :root {
+      --bg: #0e0f11;
+      --surface: #16181c;
+      --surface2: #1e2026;
+      --border: rgba(255,255,255,0.08);
+      --border2: rgba(255,255,255,0.14);
+      --text: #f0ede8;
+      --muted: #8a8782;
+      --accent: #c9a96e;
+      --accent2: #e8d5b0;
+      --danger: #e05c5c;
+      --success: #5cc98a;
+      --radius: 16px;
+      --input-bg: #1e2026;
+    }
+ 
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 3rem 1.5rem;
+    }
+ 
+    .container { width: 100%; max-width: 640px; }
+ 
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2.5rem;
+    }
+ 
+    .topbar-left { display: flex; align-items: center; gap: 14px; }
+ 
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--accent); }
+ 
+    .page-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.6rem;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+ 
+    .page-sub {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+ 
+    /* Avatar upload */
+    .avatar-upload-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem 2rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+ 
+    .avatar-preview {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--surface2);
+      border: 2px solid var(--border2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.5rem;
+      color: var(--accent);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+ 
+    .avatar-preview img { width: 100%; height: 100%; object-fit: cover; }
+ 
+    .avatar-info { flex: 1; }
+ 
+    .avatar-info p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 0.75rem;
+    }
+ 
+    .avatar-info small {
+      font-size: 0.75rem;
+      color: var(--muted);
+      opacity: 0.7;
+    }
+ 
+    .file-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 16px;
+      border-radius: 50px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid var(--border2);
+      color: var(--text);
+      transition: all 0.2s;
+      background: var(--surface2);
+    }
+    .file-label:hover { border-color: var(--accent); color: var(--accent); }
+ 
+    input[type="file"] { display: none; }
+ 
+    /* Form card */
+    .form-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+ 
+    .form-card-header {
+      padding: 1.25rem 2rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+ 
+    .form-card-header h2 {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      font-weight: 500;
+    }
+ 
+    .form-card-header span.dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+ 
+    .form-body { padding: 1.75rem 2rem; display: flex; flex-direction: column; gap: 1.25rem; }
+ 
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+ 
+    .field { display: flex; flex-direction: column; gap: 6px; }
+ 
+    label {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: 0.03em;
+    }
+ 
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="password"],
+    textarea {
+      background: var(--input-bg);
+      border: 1px solid var(--border2);
+      border-radius: 10px;
+      padding: 11px 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.92rem;
+      color: var(--text);
+      width: 100%;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+ 
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="tel"]:focus,
+    input[type="password"]:focus,
+    textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(201,169,110,0.12);
+    }
+ 
+    input::placeholder, textarea::placeholder { color: #4a4845; }
+ 
+    textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
+ 
+    .hint { font-size: 0.75rem; color: var(--muted); opacity: 0.65; line-height: 1.4; }
+ 
+    /* Django errors */
+    .errorlist {
+      list-style: none;
+      background: rgba(224,92,92,0.08);
+      border: 1px solid rgba(224,92,92,0.25);
+      border-radius: 8px;
+      padding: 10px 14px;
+    }
+ 
+    .errorlist li { font-size: 0.82rem; color: var(--danger); }
+ 
+    /* Divider */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 0.25rem 0;
+    }
+ 
+    /* Password strength indicator */
+    .strength-bar {
+      display: flex;
+      gap: 4px;
+      margin-top: 6px;
+    }
+ 
+    .strength-bar span {
+      flex: 1;
+      height: 3px;
+      border-radius: 2px;
+      background: var(--border2);
+      transition: background 0.3s;
+    }
+ 
+    /* Action bar */
+    .action-bar {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+ 
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 11px 24px;
+      border-radius: 50px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      border: 1px solid transparent;
+      transition: all 0.2s;
+    }
+ 
+    .btn-ghost {
+      background: transparent;
+      border-color: var(--border2);
+      color: var(--muted);
+    }
+    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+ 
+    .btn-primary {
+      background: var(--accent);
+      color: #1a1200;
+      font-weight: 600;
+    }
+    .btn-primary:hover { background: var(--accent2); transform: translateY(-1px); }
+    .btn-primary:active { transform: translateY(0); }
+ 
+    @media (max-width: 520px) {
+      body { padding: 1.5rem 1rem; }
+      .field-row { grid-template-columns: 1fr; }
+      .form-body { padding: 1.25rem; }
+      .form-card-header { padding: 1rem 1.25rem; }
+      .avatar-upload-section { padding: 1.25rem; flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+ 
+    <div class="topbar">
+      <div class="topbar-left">
+        <a href="{% url 'profile' %}" class="back-link">← Orqaga</a>
+      </div>
+    </div>
+ 
+    <h1 class="page-title">Profilni tahrirlash</h1>
+    <p class="page-sub">Ma'lumotlaringizni yangilang</p>
+ 
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+ 
+      <!-- Avatar -->
+      <div class="avatar-upload-section">
+        <div class="avatar-preview" id="avatarPreview">
+          {% if user.picture %}
+            <img src="{{ user.picture.url }}" alt="Rasm" id="previewImg">
+          {% else %}
+            <span id="avatarInitials">{{ user.first_name|first|upper }}{{ user.last_name|first|upper }}</span>
+          {% endif %}
+        </div>
+        <div class="avatar-info">
+          <p>Profil rasmingizni o'zgartiring</p>
+          <label class="file-label" for="pictureInput">
+            📷 Rasm tanlash
+          </label>
+          <input type="file" id="pictureInput" name="picture" accept="image/*">
+          <br><small>JPG, PNG, WEBP · 5MB gacha</small>
+        </div>
+      </div>
+ 
+      <!-- Asosiy ma'lumotlar -->
+      <div class="form-card">
+        <div class="form-card-header">
+          <span class="dot"></span>
+          <h2>Shaxsiy ma'lumotlar</h2>
+        </div>
+        <div class="form-body">
+          {% if user_form.errors %}
+            <ul class="errorlist">
+              {% for field in user_form %}{% for error in field.errors %}<li>{{ error }}</li>{% endfor %}{% endfor %}
+            </ul>
+          {% endif %}
+ 
+          <div class="field-row">
+            <div class="field">
+              <label>Ism</label>
+              <input type="text" name="first_name" value="{{ user.first_name }}" placeholder="Ismingiz">
+            </div>
+            <div class="field">
+              <label>Familiya</label>
+              <input type="text" name="last_name" value="{{ user.last_name }}" placeholder="Familiyangiz">
+            </div>
+          </div>
+ 
+          <div class="field">
+            <label>Email manzil</label>
+            <input type="email" name="email" value="{{ user.email }}" placeholder="email@misol.com">
+          </div>
+ 
+          <div class="field">
+            <label>Telefon raqam</label>
+            <input type="tel" name="phone_number" value="{{ user.phone_number }}" placeholder="+998 90 000 00 00">
+          </div>
+ 
+          {% if profile_form %}
+          <div class="divider"></div>
+          <div class="field">
+            <label>Bio</label>
+            <textarea name="bio" placeholder="O'zingiz haqingizda qisqacha...">{{ user.profile.bio }}</textarea>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+ 
+      <!-- Parol -->
+      <div class="form-card">
+        <div class="form-card-header">
+          <span class="dot" style="background: var(--muted);"></span>
+          <h2>Parolni o'zgartirish <span style="color:#4a4845; font-weight:400;">(ixtiyoriy)</span></h2>
+        </div>
+        <div class="form-body">
+          <div class="field">
+            <label>Yangi parol</label>
+            <input type="password" name="password" id="passInput" placeholder="Kamida 8 ta belgi" autocomplete="new-password">
+            <div class="strength-bar">
+              <span id="s1"></span><span id="s2"></span><span id="s3"></span><span id="s4"></span>
+            </div>
+          </div>
+          <div class="field">
+            <label>Parolni tasdiqlash</label>
+            <input type="password" name="password_confirm" placeholder="Parolni qayta kiriting" autocomplete="new-password">
+          </div>
+          <span class="hint">Eski parolni saqlamoqchi bo'lsangiz, bo'sh qoldiring.</span>
+        </div>
+      </div>
+ 
+      <div class="action-bar">
+        <a href="{% url 'profile' %}" class="btn btn-ghost">Bekor qilish</a>
+        <button type="submit" class="btn btn-primary">Saqlash →</button>
+      </div>
+ 
+    </form>
+  </div>
+ 
+  <script>
+    // Avatar preview
+    document.getElementById('pictureInput').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(ev) {
+        const prev = document.getElementById('avatarPreview');
+        prev.innerHTML = '<img src="' + ev.target.result + '" alt="Preview" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+      };
+      reader.readAsDataURL(file);
+    });
+ 
+    // Password strength
+    document.getElementById('passInput').addEventListener('input', function() {
+      const v = this.value;
+      const colors = ['#e05c5c','#e08c5c','#e8c55c','#5cc98a'];
+      let score = 0;
+      if (v.length >= 8) score++;
+      if (/[A-Z]/.test(v)) score++;
+      if (/[0-9]/.test(v)) score++;
+      if (/[^A-Za-z0-9]/.test(v)) score++;
+      for (let i = 1; i <= 4; i++) {
+        const el = document.getElementById('s'+i);
+        el.style.background = i <= score ? colors[score-1] : 'rgba(255,255,255,0.08)';
+      }
+    });
+  </script>
+</body>
+</html>

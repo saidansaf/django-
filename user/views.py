@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout, authenticate, get_user_model
 from django.contrib.auth.decorators import login_required
-from .forms import RegisterForm, LoginForm, UserUpdateForm
-from .models import CustomUser
+from .forms import RegisterForm, LoginForm, UserUpdateForm, UserProfileUpdateForm
+from .models import CustomUser,UserProfile
 
 user = get_user_model()
 
@@ -141,3 +141,52 @@ def user_delete_view(request, slug):
         user.delete()
         return redirect('user-list')
     return render(request, 'delete_user.html', {'user_obj': user})
+
+@login_required
+def profile_edit_view(request):
+    user_form = ProfileUpdateForm(instance=request.user)
+    profile_form = UserProfileUpdateForm(instance=request.user.profile)
+
+    if request.method == 'POST':
+
+        user_form = ProfileUpdateForm(
+            request.POST,
+            request.FILES,
+            instance=request.user
+        )
+
+        profile_form = UserProfileUpdateForm(
+            request.POST,
+            instance=request.user.profile
+        )
+
+        # Ikkala form ham valid bo'lishi kerak
+        if user_form.is_valid() and profile_form.is_valid():
+
+            user_form.save()
+            profile_form.save()
+
+            messages.success(request, 'Profil muvaffaqiyatli yangilandi! ✅')
+            return redirect('profile')
+
+        else:
+            messages.error(request, 'Xatolik yuz berdi. Iltimos tekshiring.')
+
+    context = {
+        'user_form': user_form,
+        'profile_form': profile_form
+    }
+
+    return render(request, 'profile_edit.html', context)
+
+
+@login_required
+def profile_delete_view(request):
+    if request.method == 'POST':
+        user = request.user
+        logout(request)
+        user.delete()
+        messages.success(request, "Akkaunt muvaffaqiyatli o'chirildi.")
+        return redirect('register')
+
+    return render(request, 'profile_delete_confirm.html')

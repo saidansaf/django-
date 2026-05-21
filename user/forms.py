@@ -4,7 +4,7 @@ from django.contrib.auth.forms import (
     AuthenticationForm
 )
 
-from .models import CustomUser
+from .models import CustomUser,UserProfile
 
 class RegisterForm(UserCreationForm):
 
@@ -33,6 +33,7 @@ class LoginForm(AuthenticationForm):
 
 
 class UserUpdateForm(forms.ModelForm):
+
     class Meta:
         model = CustomUser
         fields = [
@@ -48,3 +49,25 @@ class UserUpdateForm(forms.ModelForm):
             'email': forms.EmailInput(attrs={'placeholder': 'Email'}),
             'phone_number': forms.TextInput(attrs={'placeholder': 'Telefon raqam'}),
         }
+
+class UserProfileUpdateForm(forms.ModelForm):
+    bio = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={
+            'class': 'form-input',
+            'placeholder': "O'zingiz haqingizda yozing...",
+            'rows': 4
+        })
+    )
+
+    website = forms.URLField(
+        required=False,
+        widget=forms.URLInput(attrs={
+            'class': 'form-input',
+            'placeholder': 'https://example.com'
+        })
+    )
+
+    class Meta:
+        model = UserProfile
+        fields = ['bio', 'website']

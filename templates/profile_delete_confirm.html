@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hisobni o'chirish</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+    :root {
+      --bg: #0e0f11;
+      --surface: #16181c;
+      --surface2: #1e2026;
+      --border: rgba(255,255,255,0.08);
+      --border2: rgba(255,255,255,0.14);
+      --text: #f0ede8;
+      --muted: #8a8782;
+      --accent: #c9a96e;
+      --danger: #e05c5c;
+      --danger-bg: rgba(224,92,92,0.07);
+      --danger-border: rgba(224,92,92,0.2);
+      --radius: 16px;
+    }
+ 
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.5rem;
+    }
+ 
+    .wrap { width: 100%; max-width: 480px; }
+ 
+    /* Icon area */
+    .icon-ring {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--danger-bg);
+      border: 1px solid var(--danger-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      margin: 0 auto 1.5rem;
+      animation: pulse 2.5s ease-in-out infinite;
+    }
+ 
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(224,92,92,0.0); }
+      50% { box-shadow: 0 0 0 12px rgba(224,92,92,0.0); }
+    }
+ 
+    /* Headings */
+    .title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.8rem;
+      font-weight: 400;
+      text-align: center;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+ 
+    .subtitle {
+      font-size: 0.9rem;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+ 
+    /* Warning card */
+    .warning-card {
+      background: var(--danger-bg);
+      border: 1px solid var(--danger-border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+ 
+    .warning-card p {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--danger);
+      margin-bottom: 0.75rem;
+    }
+ 
+    .warning-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+ 
+    .warning-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.87rem;
+      color: rgba(240,237,232,0.75);
+      line-height: 1.45;
+    }
+ 
+    .warning-list li::before {
+      content: '×';
+      color: var(--danger);
+      font-weight: 700;
+      font-size: 1rem;
+      line-height: 1.2;
+      flex-shrink: 0;
+    }
+ 
+    /* Confirm input */
+    .confirm-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+ 
+    .confirm-box label {
+      display: block;
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+ 
+    .confirm-box label strong {
+      color: var(--danger);
+      font-family: monospace;
+      font-size: 0.9em;
+      letter-spacing: 0.05em;
+    }
+ 
+    .confirm-box input {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      border-radius: 10px;
+      padding: 11px 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.92rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+ 
+    .confirm-box input:focus {
+      border-color: var(--danger);
+      box-shadow: 0 0 0 3px rgba(224,92,92,0.1);
+    }
+ 
+    /* Buttons */
+    .btn-row {
+      display: flex;
+      gap: 12px;
+    }
+ 
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 13px 20px;
+      border-radius: 50px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      border: 1px solid transparent;
+      transition: all 0.2s;
+      flex: 1;
+    }
+ 
+    .btn-cancel {
+      background: var(--surface);
+      border-color: var(--border2);
+      color: var(--text);
+    }
+    .btn-cancel:hover { border-color: var(--accent); color: var(--accent); }
+ 
+    .btn-delete {
+      background: var(--danger);
+      color: #fff;
+      font-weight: 600;
+      opacity: 0.4;
+      cursor: not-allowed;
+      pointer-events: none;
+      transition: opacity 0.3s, transform 0.2s;
+    }
+ 
+    .btn-delete.active {
+      opacity: 1;
+      cursor: pointer;
+      pointer-events: auto;
+    }
+    .btn-delete.active:hover { background: #c94040; transform: translateY(-1px); }
+    .btn-delete.active:active { transform: translateY(0); }
+ 
+    /* Breadcrumb */
+    .bc {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+      text-align: center;
+      justify-content: center;
+    }
+ 
+    .bc a { color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    .bc a:hover { color: var(--accent); }
+    .bc span { color: #3a3835; }
+ 
+    @media (max-width: 420px) {
+      .btn-row { flex-direction: column-reverse; }
+      body { align-items: flex-start; padding-top: 2.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+ 
+    <div class="bc">
+      <a href="{% url 'home' %}">Bosh sahifa</a>
+      <span>/</span>
+      <a href="{% url 'profile' %}">Profil</a>
+      <span>/</span>
+      <span style="color: var(--danger);">O'chirish</span>
+    </div>
+ 
+    <div class="icon-ring">⚠️</div>
+ 
+    <h1 class="title">Haqiqatan ham o'chirasizmi?</h1>
+    <p class="subtitle">
+      Bu amalni qaytarib bo'lmaydi.<br>
+      Barcha ma'lumotlaringiz abadiy yo'qoladi.
+    </p>
+ 
+    <div class="warning-card">
+      <p>Quyidagilar o'chiriladi:</p>
+      <ul class="warning-list">
+        <li>Profil ma'lumotlari va rasm</li>
+        <li>Barcha saqlangan kontentlar</li>
+        <li>Tizimga kirish imkoniyati</li>
+        <li>Hisobga bog'liq barcha ma'lumotlar</li>
+      </ul>
+    </div>
+ 
+    <div class="confirm-box">
+      <label>
+        Tasdiqlash uchun <strong>O'CHIRISH</strong> deb yozing
+      </label>
+      <input type="text" id="confirmInput" placeholder="O'CHIRISH" autocomplete="off" spellcheck="false">
+    </div>
+ 
+    <form method="POST" id="deleteForm">
+      {% csrf_token %}
+      <div class="btn-row">
+        <a href="{% url 'profile' %}" class="btn btn-cancel">← Orqaga</a>
+        <button type="submit" class="btn btn-delete" id="deleteBtn">
+          Hisobni o'chirish
+        </button>
+      </div>
+    </form>
+ 
+  </div>
+ 
+  <script>
+    const input = document.getElementById('confirmInput');
+    const btn   = document.getElementById('deleteBtn');
+ 
+    input.addEventListener('input', function() {
+      if (this.value.trim() === "O'CHIRISH") {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+  </script>
+</body>
+</html>
