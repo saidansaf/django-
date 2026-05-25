@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="max-width:700px; margin:48px auto; padding:0 24px; color:#f0f0f0;">
+    <h1>{{ post.title }}</h1>
+    <p>{{ post.author.email }} | {{ post.created_at|date:"d M, Y" }}</p>
+    {% if post.image %}
+        <img src="{{ post.image.url }}" style="width:100%; border-radius:12px; margin:20px 0;">
+    {% endif %}
+    <p>{{ post.content }}</p>
+    <a href="{% url 'post_list' %}">← Orqaga</a>
+</div>
+{% endblock %}

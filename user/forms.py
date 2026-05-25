@@ -4,7 +4,7 @@ from django.contrib.auth.forms import (
     AuthenticationForm
 )
 
-from .models import CustomUser,UserProfile
+from .models import CustomUser, Post,UserProfile
 
 class RegisterForm(UserCreationForm):
 
@@ -51,6 +51,7 @@ class UserUpdateForm(forms.ModelForm):
         }
 
 class UserProfileUpdateForm(forms.ModelForm):
+
     bio = forms.CharField(
         required=False,
         widget=forms.Textarea(attrs={
@@ -71,3 +72,32 @@ class UserProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ['bio', 'website']
+
+class PostForm(forms.ModelForm):
+    title = forms.CharField(
+        max_length=200,
+        widget=forms.TextInput(attrs={
+            'class': 'form-input',
+            'placeholder': 'Post sarlavhasi...'
+        })
+    )
+
+    content = forms.CharField(
+        widget=forms.Textarea(attrs={
+            'class': 'form-input',
+            'placeholder': 'Post mazmuni...',
+            'rows': 8
+        })
+    )
+
+    image = forms.ImageField(
+        required=False,
+        widget=forms.FileInput(attrs={
+            'class': 'form-file',
+            'accept': 'image/*'
+        })
+    )
+
+    class Meta:
+        model = Post
+        fields = ['title', 'content', 'image']

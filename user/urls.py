@@ -22,4 +22,7 @@ urlpatterns = [
     path('profile/', views.profile_view, name='profile'),
     path('profile/edit/', views.profile_edit_view, name='profile_edit'),
     path('profile/delete/', views.profile_delete_view, name='profile_delete'),
-]
+    path('posts/',views.post_list_view,name='post_list'),
+    path('posts/create/', views.post_create_view, name='post_create'),
+    path('posts/<slug:slug>/', views.post_detail_view, name='post_detail'),
+    ]

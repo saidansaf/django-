@@ -1,8 +1,9 @@
+from pyexpat.errors import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout, authenticate, get_user_model
 from django.contrib.auth.decorators import login_required
-from .forms import RegisterForm, LoginForm, UserUpdateForm, UserProfileUpdateForm
-from .models import CustomUser,UserProfile
+from .forms import RegisterForm, LoginForm, UserUpdateForm, UserProfileUpdateForm,PostForm
+from .models import CustomUser, Post,UserProfile
 
 user = get_user_model()
 
@@ -160,7 +161,6 @@ def profile_edit_view(request):
             instance=request.user.profile
         )
 
-        # Ikkala form ham valid bo'lishi kerak
         if user_form.is_valid() and profile_form.is_valid():
 
             user_form.save()
@@ -190,3 +190,24 @@ def profile_delete_view(request):
         return redirect('register')
 
     return render(request, 'profile_delete_confirm.html')
+
+def post_list_view(request):
+    posts = Post.objects.select_related('author').all()
+    return render(request,'post_list.html',{'posts': posts})
+
+@login_required
+def post_create_view(request):
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
+            return redirect('post_list')
+    else:
+        form = PostForm()
+    return render(request, 'post_create.html', {'form': form})
+
+def post_detail_view(request, slug):
+    post = get_object_or_404(Post, slug=slug)
+    return render(request, 'post_detail.html', {'post': post})

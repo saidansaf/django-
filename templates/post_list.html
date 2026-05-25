@@ -1,0 +1,262 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content%}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barcha postlar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+        :root {
+            --bg: #0d0d0d;
+            --card-bg: #141414;
+            --card-border: #2a2a2a;
+            --accent: #c8f135;
+            --text: #f0f0f0;
+            --muted: #888;
+            --radius: 18px;
+        }
+ 
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            min-height: 100vh;
+            padding: 48px 24px;
+        }
+ 
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 900px;
+            margin: 0 auto 48px;
+        }
+ 
+        .header h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 2.6rem;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1;
+        }
+ 
+        .header h1 span {
+            color: var(--accent);
+        }
+ 
+        .btn-new {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--accent);
+            color: #0d0d0d;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            padding: 14px 24px;
+            border-radius: 50px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+ 
+        .btn-new:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(200, 241, 53, 0.3);
+        }
+ 
+        /* Grid */
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+ 
+        /* Card */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+        }
+ 
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: #3a3a3a;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+        }
+ 
+        .card-image {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            display: block;
+            background: #1e1e1e;
+        }
+ 
+        .card-no-image {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: linear-gradient(135deg, #1a1a1a 0%, #222 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            font-size: 2.5rem;
+        }
+ 
+        .card-body {
+            padding: 20px 22px 18px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+ 
+        .card-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.35;
+        }
+ 
+        .card-excerpt {
+            font-size: 0.875rem;
+            color: var(--muted);
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            flex: 1;
+        }
+ 
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 22px;
+            border-top: 1px solid var(--card-border);
+        }
+ 
+        .author-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+ 
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #2a2a2a;
+        }
+ 
+        .avatar-placeholder {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2a2a2a, #3a3a3a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-transform: uppercase;
+        }
+ 
+        .author-name {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #ccc;
+        }
+ 
+        .post-date {
+            font-size: 0.8rem;
+            color: var(--muted);
+        }
+ 
+        /* Empty state */
+        .empty {
+            max-width: 900px;
+            margin: 80px auto;
+            text-align: center;
+            color: var(--muted);
+        }
+ 
+        .empty p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+ 
+    <div class="header">
+        <h1>Barcha <span>postlar</span></h1>
+        <a href="{% url 'post_create' %}" class="btn-new">
+            <span>+</span> Yangi post
+        </a>
+    </div>
+ 
+    {% if posts %}
+    <div class="posts-grid">
+        {% for post in posts %}
+        <a href="{% url 'post_detail' post.slug %}" class="card">
+ 
+            {% if post.image %}
+                <img src="{{ post.image.url }}" alt="{{ post.title }}" class="card-image">
+            {% else %}
+                <div class="card-no-image">📝</div>
+            {% endif %}
+ 
+            <div class="card-body">
+                <div class="card-title">{{ post.title }}</div>
+                <div class="card-excerpt">{{ post.content }}</div>
+            </div>
+ 
+            <div class="card-footer">
+                <div class="author-info">
+                    {% if post.author.profile_image %}
+                        <img src="{{ post.author.profile_image.url }}" alt="{{ post.author.get_full_name }}" class="avatar">
+                    {% else %}
+                        <div class="avatar-placeholder">
+                            {{ post.author.email|first|upper }}
+                        </div>
+                    {% endif %}
+                    <span class="author-name">{{ post.author.get_full_name|default:post.author.email }}</span>
+                </div>
+                <span class="post-date">{{ post.created_at|date:"d M, Y" }}</span>
+            </div>
+ 
+        </a>
+        {% endfor %}
+    </div>
+ 
+    {% else %}
+    <div class="empty">
+        <p>Hozircha hech qanday post yo'q.</p>
+        <a href="{% url 'post_create' %}" class="btn-new">+ Birinchi postni yarating</a>
+    </div>
+    {% endif %}
+ 
+</body>
+</html>
+{% endblock %}
