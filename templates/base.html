@@ -231,6 +231,7 @@
   <div class="nav-links">
     {% if user.is_authenticated %}
       <a href="{% url 'user-list' %}">Foydalanuvchilar</a>
+      <a href="{% url 'post_list' %}">Postlar</a>
       <a href="{% url 'profile' %}">Profil</a>
       <a href="{% url 'user-create' %}" class="btn-nav">+ Yangi</a>
       <form method="post" action="{% url 'logout' %}" style="display:inline">
@@ -255,7 +256,7 @@
   {% block content %}{% endblock %}
 </main>
 
-<footer>© 2025 UserPanel — Barcha huquqlar himoyalangan</footer>
+<footer>© 2026 UserPanel — Barcha huquqlar himoyalangan</footer>
 
 {% block extra_js %}{% endblock %}
 </body>

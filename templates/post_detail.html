@@ -1,24 +1,176 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-<div style="max-width:700px; margin:48px auto; padding:0 24px; color:#f0f0f0;">
-    <h1>{{ post.title }}</h1>
-    <p>{{ post.author.email }} | {{ post.created_at|date:"d M, Y" }}</p>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --bg: #0d0d0d;
+        --card-bg: #141414;
+        --card-border: #2a2a2a;
+        --accent: #c8f135;
+        --text: #f0f0f0;
+        --muted: #888;
+        --danger: #ff4d4d;
+    }
+
+    .detail-wrapper {
+        max-width: 700px;
+        margin: 48px auto;
+        padding: 0 24px;
+    }
+
+    .detail-header {
+        margin-bottom: 24px;
+    }
+
+    .detail-header h1 {
+        font-family: 'Syne', sans-serif;
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: #fff;
+        margin-bottom: 10px;
+    }
+
+    .detail-meta {
+        color: var(--muted);
+        font-size: 0.9rem;
+    }
+
+    .detail-meta span {
+        color: var(--accent);
+    }
+
+    .detail-image {
+        width: 100%;
+        border-radius: 16px;
+        margin: 24px 0;
+        object-fit: cover;
+    }
+
+    .detail-content {
+        color: var(--text);
+        font-family: 'DM Sans', sans-serif;
+        font-size: 1.05rem;
+        line-height: 1.8;
+        margin-bottom: 28px;
+    }
+
+    .tags-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 36px;
+    }
+
+    .tag {
+        background: #1e1e1e;
+        border: 1px solid var(--card-border);
+        color: var(--accent);
+        font-size: 0.85rem;
+        padding: 6px 14px;
+        border-radius: 50px;
+    }
+
+    .detail-actions {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--muted);
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.95rem;
+        text-decoration: none;
+        padding: 10px 20px;
+        border-radius: 50px;
+        border: 1px solid var(--card-border);
+        transition: border-color 0.2s, color 0.2s;
+    }
+
+    .btn-back:hover {
+        border-color: #555;
+        color: #ccc;
+    }
+
+    .btn-edit {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--accent);
+        color: #0d0d0d;
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 700;
+        font-size: 0.95rem;
+        padding: 10px 24px;
+        border-radius: 50px;
+        text-decoration: none;
+        transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .btn-edit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(200, 241, 53, 0.3);
+    }
+
+    .btn-delete {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: transparent;
+        color: var(--danger);
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 600;
+        font-size: 0.95rem;
+        padding: 10px 24px;
+        border-radius: 50px;
+        border: 1px solid var(--danger);
+        text-decoration: none;
+        transition: background 0.2s, color 0.2s;
+    }
+
+    .btn-delete:hover {
+        background: var(--danger);
+        color: #fff;
+    }
+</style>
+
+<div class="detail-wrapper">
+
+    <div class="detail-header">
+        <h1>{{ post.title }}</h1>
+        <p class="detail-meta">
+            <span>{{ post.author.email }}</span> | {{ post.created_at|date:"d M, Y" }}
+        </p>
+    </div>
 
     {% if post.image %}
-        <img src="{{ post.image.url }}" style="width:100%; border-radius:12px; margin:20px 0;">
+        <img src="{{ post.image.url }}" class="detail-image">
     {% endif %}
 
-    <p>{{ post.content }}</p>
+    <p class="detail-content">{{ post.content }}</p>
 
     {% if post.tags.all %}
-        <div>
+        <div class="tags-wrapper">
             {% for tag in post.tags.all %}
-                <span>#{{ tag.name }}</span>
+                <span class="tag">#{{ tag.name }}</span>
             {% endfor %}
         </div>
     {% endif %}
 
-    <a href="{% url 'post_list' %}">← Orqaga</a>
+    <div class="detail-actions">
+        <a href="{% url 'post_list' %}" class="btn-back">← Orqaga</a>
+        {% if request.user == post.author %}
+            <a href="{% url 'post_update' slug=post.slug %}" class="btn-edit">✏️ Tahrirlash</a>
+            <a href="{% url 'post_delete' slug=post.slug %}" class="btn-delete">🗑 O'chirish</a>
+        {% endif %}
+    </div>
+
 </div>
 {% endblock %}

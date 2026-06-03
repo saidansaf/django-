@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --bg: #0d0d0d;
+        --card-bg: #141414;
+        --card-border: #2a2a2a;
+        --accent: #c8f135;
+        --text: #f0f0f0;
+        --muted: #888;
+        --danger: #ff4d4d;
+    }
+    .delete-wrapper { max-width: 500px; margin: 80px auto; padding: 0 24px; text-align: center; }
+    .delete-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 48px 36px; }
+    .delete-icon { font-size: 3rem; margin-bottom: 20px; }
+    .delete-card h2 { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; color: #fff; margin-bottom: 12px; }
+    .delete-card p { color: var(--muted); font-size: 1rem; margin-bottom: 32px; }
+    .delete-card p span { color: #fff; font-weight: 600; }
+    .btn-danger { display: inline-flex; align-items: center; gap: 8px; background: var(--danger); color: #fff; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 1rem; padding: 14px 32px; border-radius: 50px; border: none; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; }
+    .btn-danger:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255, 77, 77, 0.3); }
+    .btn-cancel { display: inline-flex; align-items: center; background: transparent; color: var(--muted); font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 1rem; padding: 14px 24px; border-radius: 50px; border: 1px solid var(--card-border); cursor: pointer; text-decoration: none; transition: border-color 0.2s, color 0.2s; }
+    .btn-cancel:hover { border-color: #555; color: #ccc; }
+    .form-actions { display: flex; gap: 12px; align-items: center; justify-content: center; }
+</style>
+
+<div class="delete-wrapper">
+    <div class="delete-card">
+        <div class="delete-icon">🗑️</div>
+        <h2>Postni o'chirish</h2>
+        <p>Siz <span>"{{ post.title }}"</span> postini o'chirmoqchisiz. Bu amalni ortga qaytarib bo'lmaydi.</p>
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-actions">
+                <button type="submit" class="btn-danger">🗑 O'chirish</button>
+                <a href="{% url 'post_detail' slug=post.slug %}" class="btn-cancel">Bekor qilish</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

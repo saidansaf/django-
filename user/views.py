@@ -212,3 +212,29 @@ def post_create_view(request):
             return redirect('post_detail', slug=post.slug)
 
     return render(request, 'post_create.html', {'form': form})
+
+@login_required
+def post_update_view(request, slug):
+    post = get_object_or_404(Post, slug=slug)
+    form = PostForm(instance=post)
+
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.save()
+            form.save_m2m()
+            return redirect('post_detail', slug=post.slug)
+
+    return render(request, 'post_update.html', {'form': form, 'post': post})
+
+
+@login_required
+def post_delete_view(request, slug):
+    post = get_object_or_404(Post, slug=slug)
+
+    if request.method == 'POST':
+        post.delete()
+        return redirect('post_list')
+
+    return render(request, 'post_delete.html', {'post': post})
