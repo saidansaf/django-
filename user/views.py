@@ -192,22 +192,23 @@ def profile_delete_view(request):
     return render(request, 'profile_delete_confirm.html')
 
 def post_list_view(request):
-    posts = Post.objects.select_related('author').all()
-    return render(request,'post_list.html',{'posts': posts})
+    posts = Post.objects.prefetch_related('tags').select_related('author').all()
+    return render(request,'post_list.html',{'posts': posts})    
+
+def post_detail_view(request, slug):
+    post = get_object_or_404(Post.objects.prefetch_related('tags').select_related('author'), slug=slug)
+    return render(request, 'post_detail.html', {'post': post})
 
 @login_required
 def post_create_view(request):
+    form = PostForm()
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
             post.save()
-            return redirect('post_list')
-    else:
-        form = PostForm()
-    return render(request, 'post_create.html', {'form': form})
+            form.save_m2m()
+            return redirect('post_detail', slug=post.slug)
 
-def post_detail_view(request, slug):
-    post = get_object_or_404(Post, slug=slug)
-    return render(request, 'post_detail.html', {'post': post})
+    return render(request, 'post_create.html', {'form': form})

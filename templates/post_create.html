@@ -150,30 +150,35 @@
     </div>
 
     <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
+    {% csrf_token %}
 
-        <div class="form-group">
-            <label>Sarlavha</label>
-            <input type="text" name="title" class="form-input" placeholder="Post sarlavhasi..." required>
-        </div>
+    <div class="form-group">
+        <label>Sarlavha</label>
+        <input type="text" name="title" class="form-input" placeholder="Post sarlavhasi..." required>
+    </div>
 
-        <div class="form-group">
-            <label>Mazmun</label>
-            <textarea name="content" class="form-input" placeholder="Post mazmuni..."></textarea>
-        </div>
+    <div class="form-group">
+        <label>Mazmun</label>
+        <textarea name="content" class="form-input" placeholder="Post mazmuni..."></textarea>
+    </div>
 
-        <div class="form-group">
-            <label>Rasm (ixtiyoriy)</label>
-            <label class="form-file-label">
-                <span>📎 Rasm tanlang</span>
-                <input type="file" name="image" accept="image/*">
-            </label>
-        </div>
+    <div class="form-group">
+        <label>Rasm (ixtiyoriy)</label>
+        <label class="form-file-label">
+            <span>📎 Rasm tanlang</span>
+            <input type="file" name="image" accept="image/*">
+        </label>
+    </div>
 
-        <div class="form-actions">
-            <button type="submit" class="btn-submit">✓ Saqlash</button>
-            <a href="{% url 'post_list' %}" class="btn-cancel">Bekor qilish</a>
-        </div>
-    </form>
+    <div class="form-group">
+        <label>Teglar</label>
+        {{ form.tags }}
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn-submit">✓ Saqlash</button>
+        <a href="{% url 'post_list' %}" class="btn-cancel">Bekor qilish</a>
+    </div>
+</form>
 </div>
 {% endblock %}

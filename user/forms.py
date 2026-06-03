@@ -4,7 +4,7 @@ from django.contrib.auth.forms import (
     AuthenticationForm
 )
 
-from .models import CustomUser, Post,UserProfile
+from .models import CustomUser, Post,UserProfile,Tag
 
 class RegisterForm(UserCreationForm):
 
@@ -98,6 +98,11 @@ class PostForm(forms.ModelForm):
         })
     )
 
+    tags = forms.ModelMultipleChoiceField(
+    queryset=Tag.objects.all(),
+    required=False,
+    widget=forms.CheckboxSelectMultiple(attrs={'class': 'tag-checkbox'})
+    )
     class Meta:
         model = Post
-        fields = ['title', 'content', 'image']
+        fields = ['title', 'content', 'image', 'tags']
