@@ -3,6 +3,7 @@ from django.contrib.auth.forms import (
     UserCreationForm,
     AuthenticationForm
 )
+from .models import Comment
 
 from .models import CustomUser, Post,UserProfile,Tag
 
@@ -106,3 +107,14 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ['title', 'content', 'image', 'tags']
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['content']
+        widgets = {
+            'content': forms.Textarea(attrs={
+                'rows': 3,
+                'placeholder': 'Izoh yozing...'
+            }),
+        }

@@ -24,7 +24,11 @@ urlpatterns = [
     path('profile/delete/', views.profile_delete_view, name='profile_delete'),
     path('posts/',views.post_list_view,name='post_list'),
     path('posts/create/', views.post_create_view, name='post_create'),
-    path('posts/<slug:slug>/', views.post_detail_view, name='post_detail'),
     path('posts/<slug:slug>/update/', views.post_update_view, name='post_update'),
     path('posts/<slug:slug>/delete/', views.post_delete_view, name='post_delete'),
+    path('search/', views.search_posts, name='search_posts'),
+    path('post/<slug:slug>/', views.post_detail_view, name='post_detail'),
+    path('post/<slug:slug>/like/', views.like_toggle, name='like_toggle'),
+    path('post/<slug:slug>/comment/', views.add_comment, name='add_comment'),
+    path('popular/', views.popular_posts, name='popular_posts'),
     ]

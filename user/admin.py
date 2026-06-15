@@ -14,3 +14,5 @@ class UserAdmin(admin.ModelAdmin):
 admin.site.register(models.UserProfile)
 admin.site.register(models.Post)
 admin.site.register(models.Tag)
+admin.site.register(models.Like)
+admin.site.register(models.Comment)

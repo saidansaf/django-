@@ -1,0 +1,247 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --bg: #0d0d0d;
+        --card-bg: #141414;
+        --card-border: #2a2a2a;
+        --accent: #c8f135;
+        --text: #f0f0f0;
+        --muted: #888;
+        --danger: #ff4d4d;
+    }
+
+    .search-wrapper {
+        max-width: 700px;
+        margin: 48px auto;
+        padding: 0 24px;
+    }
+
+    .search-header {
+        margin-bottom: 32px;
+    }
+
+    .search-header h1 {
+        font-family: 'Syne', sans-serif;
+        font-size: 2rem;
+        font-weight: 800;
+        color: #fff;
+        margin-bottom: 8px;
+    }
+
+    .search-header h1 span {
+        color: var(--accent);
+    }
+
+    .search-meta {
+        color: var(--muted);
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.9rem;
+    }
+
+    .search-meta strong {
+        color: var(--accent);
+    }
+
+    /* Search form */
+    .search-form {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 36px;
+    }
+
+    .search-form input {
+        flex: 1;
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 50px;
+        color: var(--text);
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.95rem;
+        padding: 12px 20px;
+        outline: none;
+        transition: border-color 0.2s;
+    }
+
+    .search-form input:focus {
+        border-color: var(--accent);
+    }
+
+    .search-form input::placeholder {
+        color: var(--muted);
+    }
+
+    .btn-search {
+        background: var(--accent);
+        color: #0d0d0d;
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 700;
+        font-size: 0.95rem;
+        padding: 12px 26px;
+        border-radius: 50px;
+        border: none;
+        cursor: pointer;
+        transition: transform 0.15s, box-shadow 0.15s;
+        white-space: nowrap;
+    }
+
+    .btn-search:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(200, 241, 53, 0.3);
+    }
+
+    /* Post card */
+    .post-card {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 16px;
+        padding: 22px 24px;
+        margin-bottom: 16px;
+        text-decoration: none;
+        display: block;
+        transition: border-color 0.2s, transform 0.15s;
+    }
+
+    .post-card:hover {
+        border-color: var(--accent);
+        transform: translateY(-2px);
+    }
+
+    .post-card-title {
+        font-family: 'Syne', sans-serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 8px;
+    }
+
+    .post-card-meta {
+        color: var(--muted);
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.85rem;
+        margin-bottom: 12px;
+    }
+
+    .post-card-meta span {
+        color: var(--accent);
+    }
+
+    .post-card-excerpt {
+        color: #aaa;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.93rem;
+        line-height: 1.6;
+        margin-bottom: 14px;
+    }
+
+    .post-card-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .tag {
+        background: #1e1e1e;
+        border: 1px solid var(--card-border);
+        color: var(--accent);
+        font-size: 0.8rem;
+        padding: 4px 12px;
+        border-radius: 50px;
+    }
+
+    /* Empty state */
+    .empty-state {
+        text-align: center;
+        padding: 64px 0;
+    }
+
+    .empty-state p {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 1rem;
+        color: var(--muted);
+        margin-bottom: 20px;
+    }
+
+    .btn-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--muted);
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.95rem;
+        text-decoration: none;
+        padding: 10px 20px;
+        border-radius: 50px;
+        border: 1px solid var(--card-border);
+        transition: border-color 0.2s, color 0.2s;
+    }
+
+    .btn-back:hover {
+        border-color: #555;
+        color: #ccc;
+    }
+</style>
+
+<div class="search-wrapper">
+
+    <!-- Sarlavha -->
+    <div class="search-header">
+        <h1>
+            {% if query %}
+                "<span>{{ query }}</span>" natijalari
+            {% else %}
+                Qidiruv
+            {% endif %}
+        </h1>
+        {% if query %}
+            <p class="search-meta">
+                <strong>{{ posts_count }}</strong> ta natija topildi
+            </p>
+        {% endif %}
+    </div>
+
+    <!-- Qidiruv formasi -->
+    <form class="search-form" method="get" action="{% url 'search_posts' %}">
+        <input
+            type="text"
+            name="q"
+            value="{{ query }}"
+            placeholder="Postlarni qidiring..."
+            autofocus
+        >
+        <button type="submit" class="btn-search">🔍 Qidirish</button>
+    </form>
+
+    <!-- Natijalar -->
+    {% if query %}
+        {% if posts %}
+            {% for post in posts %}
+                <a href="{% url 'post_detail' post.slug %}" class="post-card">
+                    <p class="post-card-title">{{ post.title }}</p>
+                    <p class="post-card-meta">
+                        <span>{{ post.author.email }}</span> · {{ post.created_at|date:"d M, Y" }}
+                    </p>
+                    <p class="post-card-excerpt">{{ post.content|truncatewords:20 }}</p>
+                    {% if post.tags.all %}
+                        <div class="post-card-tags">
+                            {% for tag in post.tags.all %}
+                                <span class="tag">#{{ tag.name }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </a>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <p>😕 "<strong style="color:#fff;">{{ query }}</strong>" bo'yicha hech narsa topilmadi.</p>
+                <a href="{% url 'post_list' %}" class="btn-back">← Barcha postlar</a>
+            </div>
+        {% endif %}
+    {% endif %}
+
+</div>
+{% endblock %}
